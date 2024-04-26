@@ -1,74 +1,95 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Context } from '../appContext'; // Import the context
+import { Link } from 'react-router-dom';
+import { Context } from '../store/appContext';
 
-const UpdateContact = ({ contactId, onSubmit }) => {
-    const { store, actions } = useContext(Context); // Access store and actions from the context
+const UpdateContact = ({ contactId }) => {
+    const { actions } = useContext(Context);
+    const [formData, setFormData] = useState({
+        fullName: '',
+        email: '',
+        phone: '',
+        address: ''
+    });
 
-    const [formData, setFormData] = useState({});
-
-    useEffect(() => {
-        // Fetch contact data when component mounts
-        fetchContactData();
-    }, []);
-
-    const fetchContactData = async () => {
-        try {
-            // Find the contact in the store based on the contact ID
-            const contact = store.contactList.find(contact => contact.id === contactId);
-            if (!contact) {
-                throw new Error('Contact not found');
-            }
-            // Populate form fields with contact data
-            setFormData(contact);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const handleChange = (e) => {
+    const handleChange = e => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
         e.preventDefault();
-        actions.updateContact(contactId, formData); // Call the updateContact action with the updated data
+        actions.updateContact(contactId, formData);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                name="fullName"
-                value={formData.fullName || ''}
-                onChange={handleChange}
-                placeholder="Full Name"
-            />
-            <input
-                type="text"
-                name="phone"
-                value={formData.phone || ''}
-                onChange={handleChange}
-                placeholder="Phone"
-            />
-            <input
-                type="email"
-                name="email"
-                value={formData.email || ''}
-                onChange={handleChange}
-                placeholder="Email"
-            />
-            <input
-                type="text"
-                name="address"
-                value={formData.address || ''}
-                onChange={handleChange}
-                placeholder="Address"
-            />
-            <button type="submit">Update Contact</button>
-        </form>
+        <div className="container mt-5">
+            <h1 className="text-center mb-4">Update Contact</h1>
+            <form onSubmit={handleSubmit} className="text-center">
+                <div className="mb-3">
+                    <label htmlFor="fullName" className="form-label">
+                        Full Name:
+                    </label>
+                    <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Full Name"
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="email" className="form-label">
+                        E-Mail:
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="E-Mail"
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="phone" className="form-label">
+                        Phone:
+                    </label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Phone"
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="address" className="form-label">
+                        Address:
+                    </label>
+                    <textarea
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Address"
+                    ></textarea>
+                </div>
+                <button type="submit" className="btn btn-primary">
+                    Update Contact
+                </button>
+            </form>
+            <Link to="/" className="btn btn-secondary mt-3">
+                Back to Home
+            </Link>
+        </div>
     );
 };
 

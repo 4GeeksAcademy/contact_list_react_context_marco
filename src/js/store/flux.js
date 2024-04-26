@@ -7,7 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         actions: {
             createAgenda: async (agendaSlug) => {
                 try {
-                    const response = await fetch("https://playground.4geeks.com/contact/agendas/${agendaSlug}", {
+                    const response = await fetch(`https://playground.4geeks.com/contact/agendas/${agendaSlug}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -61,6 +61,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
             updateContact: async (contactId, formData) => {
                 try {
+                    console.log('Updating contact with ID:', contactId);
+                    console.log('FormData:', formData);
+            
                     const response = await fetch(`https://playground.4geeks.com/contact/agendas/${getStore().currentAgenda}/contacts/${contactId}`, {
                         method: 'PUT',
                         headers: {
@@ -73,9 +76,13 @@ const getState = ({ getStore, getActions, setStore }) => {
                             address: formData.address
                         })
                     });
+            
+                    console.log('Update contact response:', response);
+            
                     if (!response.ok) {
                         throw new Error("Failed to update contact");
                     }
+            
                     getActions().fetchContacts(); 
                 } catch (error) {
                     console.error(error);
@@ -94,6 +101,23 @@ const getState = ({ getStore, getActions, setStore }) => {
                     }
                     // Fetch updated contact list after successful deletion
                     getActions().fetchContacts();
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            deleteAgenda: async (agendaSlug) => {
+                try {
+                    const response = await fetch(`https://playground.4geeks.com/contact/agendas/${agendaSlug}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if (!response.ok) {
+                        throw new Error("Failed to delete agenda");
+                    }
+                    // Clear the currentAgenda from the store after successful deletion
+                    setStore({ currentAgenda: "" });
                 } catch (error) {
                     console.error(error);
                 }

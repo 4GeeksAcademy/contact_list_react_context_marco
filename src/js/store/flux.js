@@ -1,12 +1,33 @@
 const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
-            contactList: []
+            contactList: [],
+            currentAgenda: ""
         },
         actions: {
+            createAgenda: async (agendaSlug) => {
+                try {
+                    const response = await fetch("https://playground.4geeks.com/contact/agendas/${agendaSlug}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            slug: "your-slug-here"
+                        })
+                    });
+                    if (!response.ok) {
+                        throw new Error("Failed to create agenda");
+                    }
+                    const data = await response.json();
+                    setStore({ currentAgenda: data.slug });
+                } catch (error) {
+                    console.error(error);
+                }
+            },
             fetchContacts: async () => {
                 try {
-                    const response = await fetch("https://playground.4geeks.com/contact/agendas/marcova");
+                    const response = await fetch(`https://playground.4geeks.com/contact/agendas/${getStore().currentAgenda}/contacts`);
                     if (!response.ok) {
                         throw new Error("Failed to fetch contacts");
                     }
@@ -18,7 +39,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 			addContact: async (formData) => {
 				try {
-					const response = await fetch("https://playground.4geeks.com/contact/agendas/marcova/contacts", {
+					const response = await fetch(`https://playground.4geeks.com/contact/agendas/${getStore().currentAgenda}/contacts`, {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'
@@ -40,7 +61,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
             deleteContact: async (contactId) => {
                 try {
-                    const response = await fetch(`https://playground.4geeks.com/contact/agendas/marcova/contacts/${contactId}`, {
+                    const response = await fetch(`https://playground.4geeks.com/contact/agendas/${getStore().currentAgenda}/contacts/${contactId}`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json'

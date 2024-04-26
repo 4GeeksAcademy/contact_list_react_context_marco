@@ -59,6 +59,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error(error);
 				}
 			},
+            updateContact: async (contactId, formData) => {
+                try {
+                    const response = await fetch(`https://playground.4geeks.com/contact/agendas/${getStore().currentAgenda}/contacts/${contactId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: formData.fullName,
+                            phone: formData.phone,
+                            email: formData.email,
+                            address: formData.address
+                        })
+                    });
+                    if (!response.ok) {
+                        throw new Error("Failed to update contact");
+                    }
+                    getActions().fetchContacts(); 
+                } catch (error) {
+                    console.error(error);
+                }
+            },
             deleteContact: async (contactId) => {
                 try {
                     const response = await fetch(`https://playground.4geeks.com/contact/agendas/${getStore().currentAgenda}/contacts/${contactId}`, {

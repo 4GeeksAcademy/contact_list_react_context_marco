@@ -33,6 +33,7 @@ export const Home = () => {
                                     Phone: {contact.phone}<br />
                                     Address: {contact.address}<br />
                                 </p>
+                                <Link to={{ pathname: "/update-contact", state: { initialData: contact } }} className="btn btn-primary">Update Contact</Link>
                                 <button onClick={() => handleDeleteContact(contact.id)} className="btn btn-danger">Delete Contact</button>
                             </div>
                         </div>

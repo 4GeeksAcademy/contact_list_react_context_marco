@@ -28,6 +28,7 @@ export const Home = () => {
 
     const handleDeleteAgenda = async () => {
         await actions.deleteAgenda(store.currentAgenda);
+        actions.fetchContacts();
     };
 
     return (

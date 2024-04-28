@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { Context } from '../store/appContext';
 
-const UpdateContact = ({ contactId }) => {
+const UpdateContact = () => {
+    const { id } = useParams(); // Accessing the id parameter from URL params
     const { actions } = useContext(Context);
     const [formData, setFormData] = useState({
         fullName: '',
@@ -20,7 +21,7 @@ const UpdateContact = ({ contactId }) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        actions.updateContact(contactId, formData);
+        actions.updateContact(id, formData); // Using the id extracted from URL params
     };
 
     return (

@@ -21,7 +21,7 @@ export const NewContact = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        actions.addContact(formData); // Call addContact action with form data
+        actions.addContact(formData);
         setFormData({
             fullName: "",
             email: "",

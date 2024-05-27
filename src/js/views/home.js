@@ -7,11 +7,12 @@ export const Home = () => {
     const [agendaSlug, setAgendaSlug] = useState("");
 
     useEffect(() => {
-        actions.fetchContacts();
-    }, []);
+        if (store.currentAgenda) {
+            actions.fetchContacts();
+        }
+    }, [store.currentAgenda]);
 
     const handleDeleteContact = (contactId) => {
-        console.log(contactId)
         actions.deleteContact(contactId);
     };
 
@@ -19,15 +20,23 @@ export const Home = () => {
         e.preventDefault();
         await actions.createAgenda(agendaSlug);
         setAgendaSlug("");
+        actions.fetchContacts();
     };
 
     const handleChange = (e) => {
         setAgendaSlug(e.target.value);
     };
 
+    const handleGetAgenda = async () => {
+        // Check if currentAgenda already exists before calling getAgenda
+        if (!store.currentAgenda) {
+            await actions.getAgenda(agendaSlug);
+            actions.fetchContacts();
+        }
+    };
+
     const handleDeleteAgenda = async () => {
         await actions.deleteAgenda(store.currentAgenda);
-        actions.fetchContacts();
     };
 
     return (
@@ -39,11 +48,13 @@ export const Home = () => {
                     <input type="text" className="form-control" id="agendaSlug" value={agendaSlug} onChange={handleChange} />
                 </div>
                 <div className="mb-3">
-                    <button type="submit" className="btn btn-primary">Create Agenda</button>
                     {store.currentAgenda ? (
-                        <button onClick={handleDeleteAgenda} className="btn btn-danger ms-2">Delete Agenda</button>
+                        <button onClick={handleDeleteAgenda} className="btn btn-danger">Delete Agenda</button>
                     ) : (
-                        <button className="btn btn-success ms-2">Get Existing Agenda</button>
+                        <button type="submit" className="btn btn-primary">Create Agenda</button>
+                    )}
+                    {store.currentAgenda ? null : (
+                        <button onClick={handleGetAgenda} className="btn btn-success ms-2">Get Existing Agenda</button>
                     )}
                 </div>
             </form>

@@ -32,6 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         throw new Error("Failed to fetch agenda");
                     }
                     const data = await response.json();
+                    setStore({ currentAgenda: data.slug }); // Set currentAgenda in the store
                     return data;
                 } catch (error) {
                     console.error("Error fetching agenda:", error);

@@ -29,11 +29,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                 try {
                     const response = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}`);
                     if (!response.ok) {
-                        throw new Error("Failed to fetch agenda");
+                        if (response.status === 404) {
+                            setStore({ currentAgenda: "", agendaExists: false });
+                        } else {
+                            throw new Error("Failed to fetch agenda");
+                        }
+                    } else {
+                        const data = await response.json();
+                        setStore({ currentAgenda: data.slug, agendaExists: true }); // Set currentAgenda in the store
+                        return data;
                     }
-                    const data = await response.json();
-                    setStore({ currentAgenda: data.slug }); // Set currentAgenda in the store
-                    return data;
                 } catch (error) {
                     console.error("Error fetching agenda:", error);
                     throw error;

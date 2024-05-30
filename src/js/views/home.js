@@ -41,20 +41,21 @@ export const Home = () => {
 
     return (
         <div className="container mt-5">
-            <h1 className="text-center mb-4">{store.currentAgenda ? `${store.currentAgenda}'s Contact List` : "My Contact List"}</h1>
+            {store.agendaExists === false && <div className="alert alert-danger">Agenda Does Not Exist</div>}
+            <h1 className="text-center mb-4">{store.agendaExists && store.currentAgenda ? `${store.currentAgenda}'s Contact List` : "My Contact List"}</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="agendaSlug" className="form-label">Enter Username</label>
                     <input type="text" className="form-control" id="agendaSlug" value={agendaSlug} onChange={handleChange} />
                 </div>
                 <div className="mb-3">
-                    {store.currentAgenda ? (
+                    {store.currentAgenda && store.agendaExists ? (
                         <button onClick={handleDeleteAgenda} className="btn btn-danger">Delete Agenda</button>
                     ) : (
-                        <button type="submit" className="btn btn-primary">Create Agenda</button>
-                    )}
-                    {store.currentAgenda ? null : (
-                        <button onClick={handleGetAgenda} className="btn btn-success ms-2">Get Existing Agenda</button>
+                        <>
+                            <button type="submit" className="btn btn-primary">Create Agenda</button>
+                            <button onClick={handleGetAgenda} className="btn btn-success ms-2">Get Existing Agenda</button>
+                        </>
                     )}
                 </div>
             </form>
